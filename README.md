@@ -48,18 +48,41 @@ SIGNATURE = secret key <br/>
 
 # 3 JWT authentication bypass via kid header path traversal<br/>
 
-***server ye check nhi kr raha tha ki jwt token sign hai ya nhi to ram ne AA=== null byte se jwt token ko sign kiya .. ab token server ke hisab se sign hai but vo fake taraha se sign kiya hua hai... kyuki server bus kid ko dekh raha hai to vo .././../dev/null per jata hai jaha per usko key nhi milti then vo payload ke under admin dekh kr access de deta hai .... kya ye bilul sahi hai ??***
+***server ye check nhi kr raha tha ki jwt token sign hai ya nhi to ram ne AA=== null byte se jwt token ko sign kiya .. ab token server ke hisab se sign hai but vo fake taraha se sign kiya hua hai... kyuki server bus kid ko dekh raha hai to vo .././../dev/null per jata hai jaha per usko key nhi milti then vo payload ke under admin dekh kr access de deta hai .... kya ye bilul sahi hai ??*** <br/><br/>
 
 
 ***chatgpt Haan, aap bilkul sahi samajh rahe hain! Aapne sahi tareeke se samjha hai ki server kid ID ko check kar raha hai aur ".././../dev/null" kid ID ke liye valid key nahi milta, isliye woh usko asli key ke roop mein accept nahi karta. Lekin, Ram ne cleverly yeh dekha ki server valid keys ko accept nahi karta hai, isliye usne "AA==" (Base64 encoded null byte) ka use karke ek jhootha signature banaya.
 Jab server ne token ko dekha, toh use laga ki kid ID toh valid hai, kyunki valid keys se sign hone ki expectation thi. Par Ram ne khud fake signature banayi thi, jise server ne validate nahi kiya. Isse server ne payload ko dekha aur wahan "admin" user ko dekha. Server ne ismein koi validation nahi kiya ki payload ka "admin" claim asal mein valid hai ya nahi. Is wajah se server ne Ram ko admin panel tak access de diya.
-Yeh exploit tabhi kaam karta hai jab server kid ID ko dekhkar keval asal keys ke liye check karta hai. Server ko sahi tarah se token ko validate karne ki zaroorat hoti hai, jisme kid ID, signature, aur payload ko sahi tarah se verify karna hota hai. Agar server yeh validation nahi karta, toh aise chhal-kapat ka khatra hota hai jaise Ram ne kiya.***
+Yeh exploit tabhi kaam karta hai jab server kid ID ko dekhkar keval asal keys ke liye check karta hai. Server ko sahi tarah se token ko validate karne ki zaroorat hoti hai, jisme kid ID, signature, aur payload ko sahi tarah se verify karna hota hai. Agar server yeh validation nahi karta, toh aise chhal-kapat ka khatra hota hai jaise Ram ne kiya.*** <br/><br/>
 
-![image](https://github.com/Jeetu-study/JWT/assets/132050251/9d3961bf-3461-4fd7-9d49-ac2485e91aee)
+![image](https://github.com/Jeetu-study/JWT/assets/132050251/9d3961bf-3461-4fd7-9d49-ac2485e91aee)<br/>
 
-![path](https://github.com/Jeetu-study/JWT/assets/132050251/c0eb4d35-73dc-46a3-b764-e4646d91f6ed)
+![path](https://github.com/Jeetu-study/JWT/assets/132050251/c0eb4d35-73dc-46a3-b764-e4646d91f6ed)<br/>
 
-***Humne jo symetric key use ki vo as a sign use kr rahe hai ki hum jo kid per ../../../dev/null use kr rahe usko sign bhi krna hoga but humare pass valid key nhi hai to humne AA== jo base64 main hai usse sign kr diya or server ko request send krdi.. abhi yaha per server kid to dekh raha tha but ye nhi check kr raha tha ki jwt ko sign krne wali key kya hai kyuki attacker ne null byte se token ko sign kr diya or vo bypass ho gaya***
+***Humne jo symetric key use ki vo as a sign use kr rahe hai ki hum jo kid per ../../../dev/null use kr rahe usko sign bhi krna hoga but humare pass valid key nhi hai to humne AA== jo base64 main hai usse sign kr diya or server ko request send krdi.. abhi yaha per server kid to dekh raha tha but ye nhi check kr raha tha ki jwt ko sign krne wali key kya hai kyuki attacker ne null byte se token ko sign kr diya or vo bypass ho gaya*** <br/><br/>
+
+
+# 4 JWT authentication bypass via algorithm confusion 
+
+***application ke is path per /jwks.json application ka private key hai jisko application token ko varify krne ke liye use kr raha hai. ab is path per jake object ko copy kiya and jwt editor ke under jake new rsa key main paste kr diya then ok or phir right click krke copy as pem kra and waha per public key copy ho jayegi then usko base46 main encode kiya the khudki ek new symtric key genrate ki and ( K ) peram ke under base64 wali value ko paste kr diya coz K peram hota hai vo sign ko varify krta hai ab humne k peram ko allredy application ki public key se replce kr diya and request main jake humne HS256 kr diya coz yaha per application only sign dekh rahi hai alg check nhi kr rahi***  <br/><br/>
+
+
+***Chatgpt example Jab aapne server se public key ko /jwks.json path se uthaya, to aapke paas server ka original public key tha. Us public key ko aapne PEM format mein convert kiya.
+Fir aapne JWT Editor Keys tab mein jakar ek new symmetric key generate kiya, jiska format JWK tha. Lekin server JWT token ko verify karne ke liye RSA algorithm ka use kar raha tha, jo public-private key pair ke liye hota hai. Isliye, aapne apne new symmetric key ki k property mein server ke original public key ko Base64-encoded PEM format mein daal diya.
+Aapne JWT token mein alg parameter ko bhi change kar diya HS256 mein, jo symmetric key ke liye use hota hai. Jab aapne token ko sign kiya, to aapne apne new symmetric key ko use kiya, jo actually server ka public key tha.
+Server ko bas token ka signature dekhna tha aur kisi bhi algorithm ki verification nahi thi, isliye usne signature ko verify kiya aur token ko valid maan liya. Isse aapne JWT authentication bypass kar liya.
+Aapne sahi samjha hai ki server ne alg parameter ko nahi dekha aur bas signature verify kar liya, jisse aapne JWT authentication bypass kiya.*** <br/><br/>
+
+![image](https://github.com/Jeetu-study/JWT/assets/132050251/79bd8aa4-edba-42db-8bf6-45f9c39aefb0)<br/>
+
+![image](https://github.com/Jeetu-study/JWT/assets/132050251/06b44810-08b2-4dd7-8c38-0964da1e4e51)<br/>
+
+![image](https://github.com/Jeetu-study/JWT/assets/132050251/06350c9e-d2be-4766-8e17-40797164cdd5)<br/>
+
+![image](https://github.com/Jeetu-study/JWT/assets/132050251/a7509036-80a4-48ba-a97b-188bdd6d41ac)<br/>
+
+
+
 
 
 
