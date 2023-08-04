@@ -82,6 +82,26 @@ Aapne sahi samjha hai ki server ne alg parameter ko nahi dekha aur bas signature
 ![image](https://github.com/Jeetu-study/JWT/assets/132050251/a7509036-80a4-48ba-a97b-188bdd6d41ac)<br/>
 
 
+# 4 JWT authentication bypass via algorithm confusion with no exposed key<br/>
+
+***Is lab ke under bus ek cheez hai jaise last wali ke under application ki public key expose ho rahi thi but is lab ke under humne brute-force kiya hai key ko with the help of python tool . portswigger walo ka docker contanir bhi hai jiski command docker run --rm -it portswigger/sig2n <token1> <token2> .. ab iske under phele login kiya or jwt token paste kiya token1 per or dubara se logout krke login kiya and dusra jwt token ko paste kiya token2 per or enter mara ab script ye kregi ki dono token ko match kregi or token ko tempered kregi agar script ko lagega ki token tempred ho gaya to vo result show kregi kuch or humko sare jwt token laga laga kr check krna hoga ki konsa kaam kr raha hai then jonsa token kaam kr raha hoga usko rakhenge or usse related ek key bhi ayi hogi usse hum token ke under user se admin krke varify karenge***<br/>
+
+![image](https://github.com/Jeetu-study/JWT/assets/132050251/0993f3b4-d067-4bbc-83d8-4b74a970c859)<br/>
+
+***is image main tempred token ye hai Tampered JWT: = eyJraWQiOiJhY2U0NmEyNC1hZDRmLTRiODgtYTgzMS00MzBlOTIwODI2NjkiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiAicG9ydHN3aWdnZXIiLCAic3ViIjogIndpZW5lciIsICJleHAiOiAxNjkxMjI0OTAyfQ.phuNgs38X_uqUrIaXMyn0ybs2EAY4WBdivZdGjMXqVQ  or usse related key ye = Base64 encoded x509 key: LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUFweGF2N2Z6M2YrRUZNQm80QVg5YQpYQU1xV2FRWExPYVdxUk8rajIwWWpmSjhMMzdSM255TUlGNGdrdUptN3RteXZPK0wzUVV0OGtwaWcvSzJObGhECnNsU2d6UU9hOGJwbVBHU2pISlBrRFFpWVVDd2V1Rkp4em5adXhtbzA4YURXNmZ4UEIraEd1SU5pd3JhcTZvNW8KcnRCNW9mdHZyQVlmRTJnczZKQ2Vkakh1cThXSVlwbnNoUEwvY09Rc2JEVklYZFhnWnl1UG8ycVlyYjFxZDNwQQpJdGFyY01TWDRPdTZDbCtjVGtzVC8rZ0FNUEV5bFZ4VWVEb25Rc2VHV2J2QzRXYWU1ZFBjSGJIZHFTbVpPOXoyCmdVakMwNFprYVgvNUxUVDVSaFkyRFI0ZEVtOEtrM0dlcjJvQWxxU1hPYlQ4cjhGU3ZhM0syeVVnUzBhaVNjNWMKbVFJREFRQUIKLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg==  ab isi key se token ko sign krna hoga***<br/>
+
+![image](https://github.com/Jeetu-study/JWT/assets/132050251/11217a28-f7e7-4c6d-9fc2-6a1b59e88cd4)<br/>
+
+***ab paylod section ke under modification krenge winner to admin then token ko apni symetric key se sign kr denge***<br/>
+
+![image](https://github.com/Jeetu-study/JWT/assets/132050251/d6556dbf-21d5-4d9e-89e5-9b0afa2c5ba2)<br/>
+
+***and lab solved ho jayegi***
+
+
+
+
+
 
 
 
